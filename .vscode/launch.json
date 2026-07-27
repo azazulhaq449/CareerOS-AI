@@ -1,0 +1,37 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Server: .NET Launch",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "server: build",
+      "program": "${workspaceFolder}/src/server/bin/Debug/net10.0/CareerOS.Server.dll",
+      "cwd": "${workspaceFolder}/src/server",
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ASPNETCORE_URLS": "http://localhost:5257"
+      },
+      "serverReadyAction": {
+        "action": "openExternally",
+        "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+      },
+      "stopAtEntry": false
+    },
+    {
+      "name": "Client: Chrome Launch",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:5173",
+      "webRoot": "${workspaceFolder}/src/client",
+      "preLaunchTask": "client: dev"
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Full Stack: Debug",
+      "configurations": ["Server: .NET Launch", "Client: Chrome Launch"],
+      "stopAll": true
+    }
+  ]
+}

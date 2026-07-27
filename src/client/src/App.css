@@ -153,6 +153,28 @@
   }
 }
 
+#api-status {
+  padding: 32px;
+  text-align: left;
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 12px;
+  }
+
+  th,
+  td {
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .api-error {
+    color: #e5484d;
+  }
+}
+
 #spacer {
   height: 88px;
   border-top: 1px solid var(--border);

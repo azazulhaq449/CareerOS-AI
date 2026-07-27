@@ -1,0 +1,74 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "server: build",
+      "type": "process",
+      "command": "dotnet",
+      "args": [
+        "build",
+        "${workspaceFolder}/src/server/CareerOS.Server.csproj",
+        "/property:GenerateFullPaths=true",
+        "/consoleloggerparameters:NoSummary"
+      ],
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "server: watch",
+      "type": "process",
+      "command": "dotnet",
+      "args": [
+        "watch",
+        "run",
+        "--project",
+        "${workspaceFolder}/src/server/CareerOS.Server.csproj"
+      ],
+      "isBackground": true,
+      "problemMatcher": {
+        "base": "$msCompile",
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^.*watch.*Started$|^.*watch.*File changed.*$",
+          "endsPattern": "^.*(Now listening on|Application started).*$"
+        }
+      },
+      "presentation": {
+        "group": "fullstack",
+        "panel": "dedicated"
+      }
+    },
+    {
+      "label": "client: install",
+      "type": "shell",
+      "command": "npm install",
+      "options": { "cwd": "${workspaceFolder}/src/client" },
+      "problemMatcher": []
+    },
+    {
+      "label": "client: dev",
+      "type": "shell",
+      "command": "npm run dev",
+      "options": { "cwd": "${workspaceFolder}/src/client" },
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "vite",
+        "pattern": { "regexp": "^$" },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "VITE",
+          "endsPattern": "ready in"
+        }
+      },
+      "presentation": {
+        "group": "fullstack",
+        "panel": "dedicated"
+      }
+    },
+    {
+      "label": "Run: Full Stack",
+      "dependsOrder": "parallel",
+      "dependsOn": ["server: watch", "client: dev"],
+      "problemMatcher": []
+    }
+  ]
+}

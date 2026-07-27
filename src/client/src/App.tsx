@@ -1,8 +1,66 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
 import heroImg from './assets/hero.png'
 import './App.css'
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL as string
+
+interface WeatherForecast {
+  date: string
+  temperatureC: number
+  temperatureF: number
+  summary: string
+}
+
+function ApiStatus() {
+  const [forecasts, setForecasts] = useState<WeatherForecast[] | null>(null)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    fetch(`${API_BASE_URL}/WeatherForecast`)
+      .then((res) => {
+        if (!res.ok) throw new Error(`API responded with ${res.status}`)
+        return res.json() as Promise<WeatherForecast[]>
+      })
+      .then(setForecasts)
+      .catch((err: Error) => setError(err.message))
+  }, [])
+
+  return (
+    <section id="api-status">
+      <h2>.NET API Connection</h2>
+      {error && (
+        <p className="api-error">
+          Could not reach the API at {API_BASE_URL}: {error}
+        </p>
+      )}
+      {!error && !forecasts && <p>Loading forecast from the .NET server…</p>}
+      {forecasts && (
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Temp. (°C)</th>
+              <th>Temp. (°F)</th>
+              <th>Summary</th>
+            </tr>
+          </thead>
+          <tbody>
+            {forecasts.map((f) => (
+              <tr key={f.date}>
+                <td>{f.date}</td>
+                <td>{f.temperatureC}</td>
+                <td>{f.temperatureF}</td>
+                <td>{f.summary}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+    </section>
+  )
+}
 
 function App() {
   const [count, setCount] = useState(0)
@@ -29,6 +87,10 @@ function App() {
           Count is {count}
         </button>
       </section>
+
+      <div className="ticks"></div>
+
+      <ApiStatus />
 
       <div className="ticks"></div>
 
