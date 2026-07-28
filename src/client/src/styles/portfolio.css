@@ -1,0 +1,126 @@
+/* Custom additions layered on top of the Landrick theme (bootstrap.min.css,
+   style.min.css, Unicons) copied into public/theme. These fill in utilities
+   the curated one-page layout needs that the source template didn't ship
+   pre-built (soft badge tints, icon circles, timeline, etc). */
+
+:root {
+  --portfolio-primary: #2f55d4;
+  --portfolio-primary-soft: rgba(47, 85, 212, 0.1);
+}
+
+.bg-soft-primary {
+  background-color: var(--portfolio-primary-soft);
+}
+
+.loading-screen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.hero-section {
+  min-height: 90vh;
+  height: auto;
+  padding-top: 140px;
+  padding-bottom: 80px;
+  background: linear-gradient(135deg, #f8f9fc 0%, #eef1fb 100%);
+}
+
+.type-cursor {
+  display: inline-block;
+  margin-left: 2px;
+  animation: portfolio-blink 1s step-end infinite;
+}
+
+@keyframes portfolio-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+.icon-circle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: var(--portfolio-primary-soft);
+  color: var(--portfolio-primary);
+  font-size: 24px;
+}
+
+.icon-circle-sm {
+  width: 44px;
+  height: 44px;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.project-card,
+.contact-card {
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.project-card:hover,
+.contact-card:hover {
+  transform: translateY(-4px);
+}
+
+.tag-list li,
+.skill-badge-list li {
+  font-weight: 500;
+  font-size: 0.75rem;
+}
+
+/* Experience timeline */
+.timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-width: 900px;
+  margin-inline: auto;
+}
+
+.timeline-item {
+  position: relative;
+  padding-left: 28px;
+  margin-bottom: 28px;
+}
+
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 8px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--portfolio-primary);
+}
+
+.timeline-item::after {
+  content: '';
+  position: absolute;
+  left: 11px;
+  top: 22px;
+  bottom: -28px;
+  width: 2px;
+  background: var(--portfolio-primary-soft);
+}
+
+.timeline-item:last-child::after {
+  display: none;
+}
+
+.timeline-item:last-child {
+  margin-bottom: 0;
+}

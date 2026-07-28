@@ -1,0 +1,21 @@
+# Node / React (src/client)
+node_modules/
+dist/
+dist-ssr/
+*.local
+npm-debug.log*
+
+# .NET (src/server)
+bin/
+obj/
+*.user
+appsettings.*.local.json
+
+# Editor
+.vs/
+.idea/
+*.suo
+
+# OS
+.DS_Store
+Thumbs.db
