@@ -1,4 +1,5 @@
 using CareerOS.Server.Models;
+using CareerOS.Server.Models.Requests;
 
 namespace CareerOS.Server.Repositories.InMemory;
 
@@ -10,8 +11,9 @@ namespace CareerOS.Server.Repositories.InMemory;
 /// </summary>
 public class InMemoryProfileRepository : IProfileRepository
 {
-    private static readonly Profile SeedProfile = new()
+    private static Profile SeedProfile = new()
     {
+        Id = Guid.NewGuid(),
         Name = "Azaz ul Haq",
         Initials = "AH",
         Title = "Senior Software Engineer",
@@ -29,10 +31,11 @@ public class InMemoryProfileRepository : IProfileRepository
         ],
     };
 
-    private static readonly IReadOnlyList<Strength> SeedStrengths =
+    private static readonly List<Strength> SeedStrengths =
     [
         new Strength
         {
+            Id = Guid.NewGuid(),
             Icon = "uil-server",
             Title = "End-to-End .NET Delivery",
             Description =
@@ -40,6 +43,7 @@ public class InMemoryProfileRepository : IProfileRepository
         },
         new Strength
         {
+            Id = Guid.NewGuid(),
             Icon = "uil-cloud-computing",
             Title = "Cloud-Native on Azure",
             Description =
@@ -47,6 +51,7 @@ public class InMemoryProfileRepository : IProfileRepository
         },
         new Strength
         {
+            Id = Guid.NewGuid(),
             Icon = "uil-robot",
             Title = "AI-Powered Features",
             Description =
@@ -56,5 +61,54 @@ public class InMemoryProfileRepository : IProfileRepository
 
     public Task<Profile> GetProfileAsync() => Task.FromResult(SeedProfile);
 
-    public Task<IReadOnlyList<Strength>> GetStrengthsAsync() => Task.FromResult(SeedStrengths);
+    public Task UpdateProfileAsync(ProfileRequest request)
+    {
+        SeedProfile = new Profile
+        {
+            Id = SeedProfile.Id,
+            Name = request.Name,
+            Initials = request.Initials,
+            Title = request.Title,
+            Roles = request.Roles,
+            Location = request.Location,
+            Email = request.Email,
+            Phone = request.Phone,
+            PhoneHref = request.PhoneHref,
+            LinkedInUrl = request.LinkedInUrl,
+            Summary = request.Summary,
+        };
+        return Task.CompletedTask;
+    }
+
+    public Task<IReadOnlyList<Strength>> GetStrengthsAsync() =>
+        Task.FromResult<IReadOnlyList<Strength>>(SeedStrengths);
+
+    public Task<Strength> CreateStrengthAsync(StrengthRequest request)
+    {
+        var strength = new Strength { Id = Guid.NewGuid(), Icon = request.Icon, Title = request.Title, Description = request.Description };
+        SeedStrengths.Add(strength);
+        return Task.FromResult(strength);
+    }
+
+    public Task UpdateStrengthAsync(Guid id, StrengthRequest request)
+    {
+        var index = SeedStrengths.FindIndex(s => s.Id == id);
+        if (index < 0)
+        {
+            throw new KeyNotFoundException($"Strength '{id}' not found.");
+        }
+
+        SeedStrengths[index] = new Strength { Id = id, Icon = request.Icon, Title = request.Title, Description = request.Description };
+        return Task.CompletedTask;
+    }
+
+    public Task DeleteStrengthAsync(Guid id)
+    {
+        var removed = SeedStrengths.RemoveAll(s => s.Id == id);
+        if (removed == 0)
+        {
+            throw new KeyNotFoundException($"Strength '{id}' not found.");
+        }
+        return Task.CompletedTask;
+    }
 }

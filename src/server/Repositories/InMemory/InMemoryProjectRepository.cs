@@ -1,4 +1,5 @@
 using CareerOS.Server.Models;
+using CareerOS.Server.Models.Requests;
 
 namespace CareerOS.Server.Repositories.InMemory;
 
@@ -8,10 +9,11 @@ namespace CareerOS.Server.Repositories.InMemory;
 /// </summary>
 public class InMemoryProjectRepository : IProjectRepository
 {
-    private static readonly IReadOnlyList<ProjectEntry> SeedProjects =
+    private static readonly List<ProjectEntry> SeedProjects =
     [
         new ProjectEntry
         {
+            Id = Guid.NewGuid(),
             Name = "KidsPass",
             Organisation = "Digital Reward Group",
             Icon = "uil-ticket",
@@ -21,6 +23,7 @@ public class InMemoryProjectRepository : IProjectRepository
         },
         new ProjectEntry
         {
+            Id = Guid.NewGuid(),
             Name = "Meter Companion",
             Organisation = "Autocab",
             Icon = "uil-taxi",
@@ -30,6 +33,7 @@ public class InMemoryProjectRepository : IProjectRepository
         },
         new ProjectEntry
         {
+            Id = Guid.NewGuid(),
             Name = "Instamail AI",
             Organisation = "Upwork",
             Icon = "uil-robot",
@@ -39,6 +43,7 @@ public class InMemoryProjectRepository : IProjectRepository
         },
         new ProjectEntry
         {
+            Id = Guid.NewGuid(),
             Name = "Pattern.com",
             Organisation = "Upwork",
             Icon = "uil-sitemap",
@@ -48,6 +53,7 @@ public class InMemoryProjectRepository : IProjectRepository
         },
         new ProjectEntry
         {
+            Id = Guid.NewGuid(),
             Name = "WORKS Performance Monitor",
             Organisation = "Strategic Systems International",
             Icon = "uil-chart-line",
@@ -57,6 +63,7 @@ public class InMemoryProjectRepository : IProjectRepository
         },
         new ProjectEntry
         {
+            Id = Guid.NewGuid(),
             Name = "WORKS Material Tower Cluster Controller",
             Organisation = "Strategic Systems International",
             Icon = "uil-database",
@@ -66,6 +73,7 @@ public class InMemoryProjectRepository : IProjectRepository
         },
         new ProjectEntry
         {
+            Id = Guid.NewGuid(),
             Name = "Deal.Bargains",
             Organisation = "Ai logica",
             Icon = "uil-shopping-cart",
@@ -75,6 +83,7 @@ public class InMemoryProjectRepository : IProjectRepository
         },
         new ProjectEntry
         {
+            Id = Guid.NewGuid(),
             Name = "Millimeter",
             Organisation = "Ai logica",
             Icon = "uil-link-alt",
@@ -84,6 +93,7 @@ public class InMemoryProjectRepository : IProjectRepository
         },
         new ProjectEntry
         {
+            Id = Guid.NewGuid(),
             Name = "National History Museum",
             Organisation = "Ai logica",
             Icon = "uil-university",
@@ -93,5 +103,54 @@ public class InMemoryProjectRepository : IProjectRepository
         },
     ];
 
-    public Task<IReadOnlyList<ProjectEntry>> GetAllAsync() => Task.FromResult(SeedProjects);
+    public Task<IReadOnlyList<ProjectEntry>> GetAllAsync() =>
+        Task.FromResult<IReadOnlyList<ProjectEntry>>(SeedProjects);
+
+    public Task<ProjectEntry?> GetByIdAsync(Guid id) =>
+        Task.FromResult(SeedProjects.FirstOrDefault(p => p.Id == id));
+
+    public Task<ProjectEntry> CreateAsync(ProjectEntryRequest request)
+    {
+        var entry = new ProjectEntry
+        {
+            Id = Guid.NewGuid(),
+            Name = request.Name,
+            Organisation = request.Organisation,
+            Icon = request.Icon,
+            Description = request.Description,
+            Tags = request.Tags,
+        };
+        SeedProjects.Add(entry);
+        return Task.FromResult(entry);
+    }
+
+    public Task UpdateAsync(Guid id, ProjectEntryRequest request)
+    {
+        var index = SeedProjects.FindIndex(p => p.Id == id);
+        if (index < 0)
+        {
+            throw new KeyNotFoundException($"Project entry '{id}' not found.");
+        }
+
+        SeedProjects[index] = new ProjectEntry
+        {
+            Id = id,
+            Name = request.Name,
+            Organisation = request.Organisation,
+            Icon = request.Icon,
+            Description = request.Description,
+            Tags = request.Tags,
+        };
+        return Task.CompletedTask;
+    }
+
+    public Task DeleteAsync(Guid id)
+    {
+        var removed = SeedProjects.RemoveAll(p => p.Id == id);
+        if (removed == 0)
+        {
+            throw new KeyNotFoundException($"Project entry '{id}' not found.");
+        }
+        return Task.CompletedTask;
+    }
 }

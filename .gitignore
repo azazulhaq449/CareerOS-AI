@@ -11,6 +11,9 @@ obj/
 *.user
 appsettings.*.local.json
 
+# Docker
+docker/.env
+
 # Editor
 .vs/
 .idea/

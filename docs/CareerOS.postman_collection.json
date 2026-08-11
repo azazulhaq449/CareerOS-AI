@@ -1,0 +1,396 @@
+{
+  "info": {
+    "name": "CareerOS API",
+    "description": "Auth + full CRUD for the CareerOS portfolio API. Run 'Auth > Login' first — it auto-captures the JWT into the accessToken collection variable, which every other request uses via inherited Bearer auth.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }]
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5257" },
+    { "key": "accessToken", "value": "" },
+    { "key": "experienceId", "value": "" },
+    { "key": "projectId", "value": "" },
+    { "key": "skillGroupId", "value": "" },
+    { "key": "strengthId", "value": "" },
+    { "key": "certificationId", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "auth": { "type": "noauth" },
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"your-admin-email\",\n  \"password\": \"your-admin-password\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/auth/login", "host": ["{{baseUrl}}"], "path": ["api", "auth", "login"] }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const body = pm.response.json();",
+                  "pm.collectionVariables.set('accessToken', body.accessToken);",
+                  "pm.test('login succeeded', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Me",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/auth/me", "host": ["{{baseUrl}}"], "path": ["api", "auth", "me"] }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/api/auth/logout", "host": ["{{baseUrl}}"], "path": ["api", "auth", "logout"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Profile",
+      "item": [
+        {
+          "name": "Get Profile",
+          "request": {
+            "method": "GET",
+            "auth": { "type": "noauth" },
+            "url": { "raw": "{{baseUrl}}/api/profile", "host": ["{{baseUrl}}"], "path": ["api", "profile"] }
+          }
+        },
+        {
+          "name": "Update Profile",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Azaz ul Haq\",\n  \"initials\": \"AH\",\n  \"title\": \"Senior Software Engineer\",\n  \"roles\": [\"Senior .NET Engineer\"],\n  \"location\": \"Manchester, United Kingdom\",\n  \"email\": \"azaz.ulhaqq@gmail.com\",\n  \"phone\": \"+44 7774 031733\",\n  \"phoneHref\": \"tel:+447774031733\",\n  \"linkedInUrl\": \"https://www.linkedin.com/in/azaz-ul-haq-dev/\",\n  \"summary\": [\"Paragraph one.\"]\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/profile", "host": ["{{baseUrl}}"], "path": ["api", "profile"] }
+          }
+        },
+        {
+          "name": "Get Strengths",
+          "request": {
+            "method": "GET",
+            "auth": { "type": "noauth" },
+            "url": { "raw": "{{baseUrl}}/api/profile/strengths", "host": ["{{baseUrl}}"], "path": ["api", "profile", "strengths"] }
+          }
+        },
+        {
+          "name": "Create Strength",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"icon\": \"uil-server\",\n  \"title\": \"Example Strength\",\n  \"description\": \"Description here.\",\n  \"sortOrder\": 0\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/profile/strengths", "host": ["{{baseUrl}}"], "path": ["api", "profile", "strengths"] }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": { "exec": ["const body = pm.response.json();", "pm.collectionVariables.set('strengthId', body.id);"] }
+            }
+          ]
+        },
+        {
+          "name": "Update Strength",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"icon\": \"uil-server\",\n  \"title\": \"Updated Strength\",\n  \"description\": \"Updated description.\",\n  \"sortOrder\": 0\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/profile/strengths/{{strengthId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "profile", "strengths", "{{strengthId}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete Strength",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/api/profile/strengths/{{strengthId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "profile", "strengths", "{{strengthId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Experience",
+      "item": [
+        {
+          "name": "Get All",
+          "request": {
+            "method": "GET",
+            "auth": { "type": "noauth" },
+            "url": { "raw": "{{baseUrl}}/api/experience", "host": ["{{baseUrl}}"], "path": ["api", "experience"] }
+          }
+        },
+        {
+          "name": "Create",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"company\": \"Example Ltd\",\n  \"location\": \"Remote\",\n  \"role\": \"Senior Engineer\",\n  \"period\": \"2026 – Present\",\n  \"projects\": \"Project A, Project B\",\n  \"highlights\": [\"Did a thing\", \"Did another thing\"],\n  \"sortOrder\": 0\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/experience", "host": ["{{baseUrl}}"], "path": ["api", "experience"] }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": { "exec": ["const body = pm.response.json();", "pm.collectionVariables.set('experienceId', body.id);"] }
+            }
+          ]
+        },
+        {
+          "name": "Update",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"company\": \"Example Ltd\",\n  \"location\": \"Remote\",\n  \"role\": \"Senior Engineer (Updated)\",\n  \"period\": \"2026 – Present\",\n  \"projects\": \"Project A, Project B\",\n  \"highlights\": [\"Updated highlight\"],\n  \"sortOrder\": 0\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/experience/{{experienceId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "experience", "{{experienceId}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/api/experience/{{experienceId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "experience", "{{experienceId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Projects",
+      "item": [
+        {
+          "name": "Get All",
+          "request": {
+            "method": "GET",
+            "auth": { "type": "noauth" },
+            "url": { "raw": "{{baseUrl}}/api/projects", "host": ["{{baseUrl}}"], "path": ["api", "projects"] }
+          }
+        },
+        {
+          "name": "Create",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Example Project\",\n  \"organisation\": \"Example Ltd\",\n  \"icon\": \"uil-star\",\n  \"description\": \"What it does.\",\n  \"tags\": [\"React\", \".NET\"],\n  \"sortOrder\": 0\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/projects", "host": ["{{baseUrl}}"], "path": ["api", "projects"] }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": { "exec": ["const body = pm.response.json();", "pm.collectionVariables.set('projectId', body.id);"] }
+            }
+          ]
+        },
+        {
+          "name": "Update",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Example Project (Updated)\",\n  \"organisation\": \"Example Ltd\",\n  \"icon\": \"uil-star\",\n  \"description\": \"Updated description.\",\n  \"tags\": [\"React\", \".NET\"],\n  \"sortOrder\": 0\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/projects/{{projectId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "projects", "{{projectId}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/api/projects/{{projectId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "projects", "{{projectId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Skills",
+      "item": [
+        {
+          "name": "Get All",
+          "request": {
+            "method": "GET",
+            "auth": { "type": "noauth" },
+            "url": { "raw": "{{baseUrl}}/api/skills", "host": ["{{baseUrl}}"], "path": ["api", "skills"] }
+          }
+        },
+        {
+          "name": "Create",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"category\": \"Example Category\",\n  \"icon\": \"uil-server\",\n  \"items\": [\"Skill A\", \"Skill B\"],\n  \"sortOrder\": 0\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/skills", "host": ["{{baseUrl}}"], "path": ["api", "skills"] }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": { "exec": ["const body = pm.response.json();", "pm.collectionVariables.set('skillGroupId', body.id);"] }
+            }
+          ]
+        },
+        {
+          "name": "Update",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"category\": \"Example Category (Updated)\",\n  \"icon\": \"uil-server\",\n  \"items\": [\"Skill A\", \"Skill B\", \"Skill C\"],\n  \"sortOrder\": 0\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/skills/{{skillGroupId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "skills", "{{skillGroupId}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/api/skills/{{skillGroupId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "skills", "{{skillGroupId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Credentials",
+      "item": [
+        {
+          "name": "Get Credentials",
+          "request": {
+            "method": "GET",
+            "auth": { "type": "noauth" },
+            "url": { "raw": "{{baseUrl}}/api/credentials", "host": ["{{baseUrl}}"], "path": ["api", "credentials"] }
+          }
+        },
+        {
+          "name": "Create Certification",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Example Certification\",\n  \"date\": \"2026\",\n  \"sortOrder\": 0\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/credentials/certifications",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "credentials", "certifications"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": { "exec": ["const body = pm.response.json();", "pm.collectionVariables.set('certificationId', body.id);"] }
+            }
+          ]
+        },
+        {
+          "name": "Update Certification",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Example Certification (Updated)\",\n  \"date\": \"2026\",\n  \"sortOrder\": 0\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/credentials/certifications/{{certificationId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "credentials", "certifications", "{{certificationId}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete Certification",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/api/credentials/certifications/{{certificationId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "credentials", "certifications", "{{certificationId}}"]
+            }
+          }
+        },
+        {
+          "name": "Update Education",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"school\": \"Government College University\",\n  \"degree\": \"Bachelor of Computer Science\",\n  \"location\": \"Lahore, Pakistan\",\n  \"date\": \"June 2017\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/credentials/education",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "credentials", "education"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

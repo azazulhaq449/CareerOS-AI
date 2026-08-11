@@ -1,5 +1,5 @@
 using CareerOS.Server.Repositories;
-using CareerOS.Server.Repositories.InMemory;
+using CareerOS.Server.Repositories.EfCore;
 using CareerOS.Server.Services;
 
 namespace CareerOS.Server.Extensions;
@@ -8,25 +8,29 @@ public static class ServiceCollectionExtensions
 {
     /// <summary>
     /// Registers the portfolio feature's repository and service layers.
-    /// Repositories are bound to their in-memory implementations for now —
-    /// no database has been chosen yet. When one is, only the repository
-    /// registrations below need to change (e.g. to Scoped, EF-Core-backed
-    /// implementations); services and controllers depend solely on the
-    /// repository interfaces and are unaffected.
+    /// Repositories are bound to their EF Core / PostgreSQL implementations.
+    /// Both repositories and services are Scoped — they (transitively) hold
+    /// a <see cref="Data.CareerOSDbContext"/>, which is itself Scoped, so
+    /// nothing above this layer can be a Singleton.
+    ///
+    /// The <c>Repositories.InMemory</c> implementations are kept in the
+    /// codebase (unused here) for fast unit tests that don't need a real
+    /// database — swapping them back in only requires changing the
+    /// registrations below.
     /// </summary>
     public static IServiceCollection AddPortfolioFeature(this IServiceCollection services)
     {
-        services.AddSingleton<IProfileRepository, InMemoryProfileRepository>();
-        services.AddSingleton<IExperienceRepository, InMemoryExperienceRepository>();
-        services.AddSingleton<IProjectRepository, InMemoryProjectRepository>();
-        services.AddSingleton<ISkillRepository, InMemorySkillRepository>();
-        services.AddSingleton<ICredentialsRepository, InMemoryCredentialsRepository>();
+        services.AddScoped<IProfileRepository, EfCoreProfileRepository>();
+        services.AddScoped<IExperienceRepository, EfCoreExperienceRepository>();
+        services.AddScoped<IProjectRepository, EfCoreProjectRepository>();
+        services.AddScoped<ISkillRepository, EfCoreSkillRepository>();
+        services.AddScoped<ICredentialsRepository, EfCoreCredentialsRepository>();
 
-        services.AddSingleton<IProfileService, ProfileService>();
-        services.AddSingleton<IExperienceService, ExperienceService>();
-        services.AddSingleton<IProjectService, ProjectService>();
-        services.AddSingleton<ISkillService, SkillService>();
-        services.AddSingleton<ICredentialsService, CredentialsService>();
+        services.AddScoped<IProfileService, ProfileService>();
+        services.AddScoped<IExperienceService, ExperienceService>();
+        services.AddScoped<IProjectService, ProjectService>();
+        services.AddScoped<ISkillService, SkillService>();
+        services.AddScoped<ICredentialsService, CredentialsService>();
 
         return services;
     }

@@ -2,6 +2,7 @@ namespace CareerOS.Server.Models;
 
 public class ExperienceEntry
 {
+    public required Guid Id { get; init; }
     public required string Company { get; init; }
     public required string Location { get; init; }
     public required string Role { get; init; }

@@ -1,0 +1,87 @@
+/* Custom additions layered on top of the Landrick Dashboard theme
+   (bootstrap.min.css, style.min.css, icons.min.css, Unicons) copied into
+   public/theme. Fills in utilities the template doesn't ship pre-built. */
+
+:root {
+  --admin-primary: #2f55d4;
+  --admin-primary-soft: rgba(47, 85, 212, 0.1);
+  --admin-danger-soft: rgba(220, 53, 69, 0.1);
+}
+
+.btn-soft-primary {
+  background-color: var(--admin-primary-soft);
+  color: var(--admin-primary);
+  border: none;
+}
+.btn-soft-primary:hover {
+  background-color: var(--admin-primary);
+  color: #fff;
+}
+
+.btn-soft-danger {
+  background-color: var(--admin-danger-soft);
+  color: #dc3545;
+  border: none;
+}
+.btn-soft-danger:hover {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+.bg-soft-primary {
+  background-color: var(--admin-primary-soft);
+}
+
+/* Sidebar active link */
+.sidebar-menu a.active {
+  color: var(--admin-primary) !important;
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+/* Sidebar show/hide. The template's own .toggled rules are contradictory
+   across its many overlapping (and apparently redundant) media-query blocks
+   — likely leftovers from its SCSS source being split across partials that
+   got merged inconsistently when minified. Rather than depend on that,
+   these rules take sole, unambiguous ownership of sidebar visibility.
+   #sidebar's ID selector reliably outweighs the template's class-based
+   rules regardless of source order. */
+#sidebar {
+  left: 0;
+}
+.page-wrapper .page-content {
+  padding-left: 300px;
+  transition: padding-left 0.3s ease;
+}
+.page-wrapper.sidebar-hidden #sidebar {
+  left: -300px;
+}
+.page-wrapper.sidebar-hidden .page-content {
+  padding-left: 0;
+}
+@media (max-width: 1024px) {
+  #sidebar {
+    left: -300px;
+  }
+  .page-wrapper .page-content {
+    padding-left: 0;
+  }
+  .page-wrapper.sidebar-hidden #sidebar {
+    left: 0;
+  }
+}
+
+.loading-screen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.array-field-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.array-field-row input {
+  flex: 1 1 auto;
+}

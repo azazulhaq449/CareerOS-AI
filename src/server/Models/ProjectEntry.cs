@@ -2,6 +2,7 @@ namespace CareerOS.Server.Models;
 
 public class ProjectEntry
 {
+    public required Guid Id { get; init; }
     public required string Name { get; init; }
     public required string Organisation { get; init; }
     public required string Icon { get; init; }

@@ -1,4 +1,5 @@
 using CareerOS.Server.Models;
+using CareerOS.Server.Models.Requests;
 using CareerOS.Server.Repositories;
 
 namespace CareerOS.Server.Services;
@@ -21,4 +22,14 @@ public class CredentialsService(ICredentialsRepository repository) : ICredential
             Education = education,
         };
     }
+
+    public Task<Certification> CreateCertificationAsync(CertificationRequest request) =>
+        repository.CreateCertificationAsync(request);
+
+    public Task UpdateCertificationAsync(Guid id, CertificationRequest request) =>
+        repository.UpdateCertificationAsync(id, request);
+
+    public Task DeleteCertificationAsync(Guid id) => repository.DeleteCertificationAsync(id);
+
+    public Task UpdateEducationAsync(EducationEntryRequest request) => repository.UpdateEducationAsync(request);
 }

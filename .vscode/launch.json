@@ -25,12 +25,25 @@
       "url": "http://localhost:5173",
       "webRoot": "${workspaceFolder}/src/client",
       "preLaunchTask": "client: dev"
+    },
+    {
+      "name": "Admin: Chrome Launch",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:5174",
+      "webRoot": "${workspaceFolder}/src/admin",
+      "preLaunchTask": "admin: dev"
     }
   ],
   "compounds": [
     {
       "name": "Full Stack: Debug",
       "configurations": ["Server: .NET Launch", "Client: Chrome Launch"],
+      "stopAll": true
+    },
+    {
+      "name": "Full Stack + Admin: Debug",
+      "configurations": ["Server: .NET Launch", "Client: Chrome Launch", "Admin: Chrome Launch"],
       "stopAll": true
     }
   ]

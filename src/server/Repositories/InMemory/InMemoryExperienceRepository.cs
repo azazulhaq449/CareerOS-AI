@@ -1,4 +1,5 @@
 using CareerOS.Server.Models;
+using CareerOS.Server.Models.Requests;
 
 namespace CareerOS.Server.Repositories.InMemory;
 
@@ -8,10 +9,11 @@ namespace CareerOS.Server.Repositories.InMemory;
 /// </summary>
 public class InMemoryExperienceRepository : IExperienceRepository
 {
-    private static readonly IReadOnlyList<ExperienceEntry> SeedExperience =
+    private static readonly List<ExperienceEntry> SeedExperience =
     [
         new ExperienceEntry
         {
+            Id = Guid.NewGuid(),
             Company = "Digital Reward Group",
             Location = "Manchester, UK",
             Role = "Senior Software Developer",
@@ -28,6 +30,7 @@ public class InMemoryExperienceRepository : IExperienceRepository
         },
         new ExperienceEntry
         {
+            Id = Guid.NewGuid(),
             Company = "Autocab",
             Location = "Manchester, UK",
             Role = "Software Developer",
@@ -43,6 +46,7 @@ public class InMemoryExperienceRepository : IExperienceRepository
         },
         new ExperienceEntry
         {
+            Id = Guid.NewGuid(),
             Company = "Strategic Systems International",
             Location = "UK",
             Role = "Senior Software Engineer",
@@ -59,6 +63,7 @@ public class InMemoryExperienceRepository : IExperienceRepository
         },
         new ExperienceEntry
         {
+            Id = Guid.NewGuid(),
             Company = "Ai logica",
             Location = "Remote, UK",
             Role = "Full Stack .NET Developer",
@@ -74,5 +79,56 @@ public class InMemoryExperienceRepository : IExperienceRepository
         },
     ];
 
-    public Task<IReadOnlyList<ExperienceEntry>> GetAllAsync() => Task.FromResult(SeedExperience);
+    public Task<IReadOnlyList<ExperienceEntry>> GetAllAsync() =>
+        Task.FromResult<IReadOnlyList<ExperienceEntry>>(SeedExperience);
+
+    public Task<ExperienceEntry?> GetByIdAsync(Guid id) =>
+        Task.FromResult(SeedExperience.FirstOrDefault(e => e.Id == id));
+
+    public Task<ExperienceEntry> CreateAsync(ExperienceEntryRequest request)
+    {
+        var entry = new ExperienceEntry
+        {
+            Id = Guid.NewGuid(),
+            Company = request.Company,
+            Location = request.Location,
+            Role = request.Role,
+            Period = request.Period,
+            Projects = request.Projects,
+            Highlights = request.Highlights,
+        };
+        SeedExperience.Add(entry);
+        return Task.FromResult(entry);
+    }
+
+    public Task UpdateAsync(Guid id, ExperienceEntryRequest request)
+    {
+        var index = SeedExperience.FindIndex(e => e.Id == id);
+        if (index < 0)
+        {
+            throw new KeyNotFoundException($"Experience entry '{id}' not found.");
+        }
+
+        SeedExperience[index] = new ExperienceEntry
+        {
+            Id = id,
+            Company = request.Company,
+            Location = request.Location,
+            Role = request.Role,
+            Period = request.Period,
+            Projects = request.Projects,
+            Highlights = request.Highlights,
+        };
+        return Task.CompletedTask;
+    }
+
+    public Task DeleteAsync(Guid id)
+    {
+        var removed = SeedExperience.RemoveAll(e => e.Id == id);
+        if (removed == 0)
+        {
+            throw new KeyNotFoundException($"Experience entry '{id}' not found.");
+        }
+        return Task.CompletedTask;
+    }
 }

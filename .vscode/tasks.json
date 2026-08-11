@@ -65,9 +65,42 @@
       }
     },
     {
+      "label": "admin: install",
+      "type": "shell",
+      "command": "npm install",
+      "options": { "cwd": "${workspaceFolder}/src/admin" },
+      "problemMatcher": []
+    },
+    {
+      "label": "admin: dev",
+      "type": "shell",
+      "command": "npm run dev",
+      "options": { "cwd": "${workspaceFolder}/src/admin" },
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "vite",
+        "pattern": { "regexp": "^$" },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "VITE",
+          "endsPattern": "ready in"
+        }
+      },
+      "presentation": {
+        "group": "fullstack",
+        "panel": "dedicated"
+      }
+    },
+    {
       "label": "Run: Full Stack",
       "dependsOrder": "parallel",
       "dependsOn": ["server: watch", "client: dev"],
+      "problemMatcher": []
+    },
+    {
+      "label": "Run: Everything",
+      "dependsOrder": "parallel",
+      "dependsOn": ["server: watch", "client: dev", "admin: dev"],
       "problemMatcher": []
     }
   ]
