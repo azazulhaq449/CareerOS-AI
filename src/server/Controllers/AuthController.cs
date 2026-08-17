@@ -11,8 +11,7 @@ namespace CareerOS.Server.Controllers;
 [Route("api/auth")]
 public class AuthController(
     UserManager<ApplicationUser> userManager,
-    IJwtTokenService jwtTokenService,
-    IWebHostEnvironment environment) : ControllerBase
+    IJwtTokenService jwtTokenService) : ControllerBase
 {
     public const string AuthCookieName = "careeros_access_token";
 
@@ -27,13 +26,17 @@ public class AuthController(
 
         var token = jwtTokenService.CreateToken(user);
 
-        // Secure requires HTTPS — local dev runs plain HTTP, so a Secure
-        // cookie would be silently dropped by the browser and login would
-        // appear to succeed while never actually persisting a session.
+        // Secure requires HTTPS. Driven by the actual request scheme
+        // (Request.IsHttps) rather than the environment name — correct
+        // over plain HTTP in any environment (local dev, or this project's
+        // "production-style" Docker Compose stack, which still serves
+        // over plain HTTP locally) and automatically becomes correct the
+        // day real HTTPS termination is added in front of the API,
+        // without needing a code change then.
         Response.Cookies.Append(AuthCookieName, token.AccessToken, new CookieOptions
         {
             HttpOnly = true,
-            Secure = !environment.IsDevelopment(),
+            Secure = Request.IsHttps,
             SameSite = SameSiteMode.Strict,
             Expires = token.ExpiresAtUtc,
         });

@@ -1,5 +1,6 @@
-# Development stack — hot reload for all three apps via bind mounts.
-# Run: docker compose -f docker/docker-compose.yml up --build
+# Production-style stack — optimized builds, no bind mounts, no hot reload.
+# React apps are compiled and served by nginx; the API runs as a published
+# release build. Run: docker compose -f docker/docker-compose.prod.yml up --build
 # See docs/Docker-Guide.md for a full step-by-step walkthrough.
 
 services:
@@ -22,21 +23,15 @@ services:
       retries: 10
 
   server:
-    container_name: careeros-server-dev
+    container_name: careeros-server-prod
+    restart: unless-stopped
     build:
       context: ../src/server
-      target: dev
+      target: prod
     ports:
       - "5257:5257"
-    volumes:
-      - ../src/server:/app
-      # Anonymous volumes: keep the container's own restore/build output
-      # instead of letting the bind mount above hide it (the host folder
-      # has no bin/obj, or stale ones from a local `dotnet build`).
-      - /app/bin
-      - /app/obj
     environment:
-      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_ENVIRONMENT: Production
       ConnectionStrings__CareerOS: "Host=postgres;Port=5432;Database=${POSTGRES_DB:-careeros};Username=${POSTGRES_USER:-careeros};Password=${POSTGRES_PASSWORD}"
       Jwt__Key: ${JWT_KEY}
       Jwt__Issuer: ${JWT_ISSUER}
@@ -48,32 +43,26 @@ services:
         condition: service_healthy
 
   client:
-    container_name: careeros-client-dev
+    container_name: careeros-client-prod
+    restart: unless-stopped
     build:
       context: ../src/client
-      target: dev
+      target: prod
+      args:
+        VITE_API_BASE_URL: http://localhost:5257
     ports:
-      - "5173:5173"
-    volumes:
-      - ../src/client:/app
-      - /app/node_modules
-    environment:
-      VITE_API_BASE_URL: http://localhost:5257
-      VITE_DOCKER: "true"
+      - "5173:80"
 
   admin:
-    container_name: careeros-admin-dev
+    container_name: careeros-admin-prod
+    restart: unless-stopped
     build:
       context: ../src/admin
-      target: dev
+      target: prod
+      args:
+        VITE_API_BASE_URL: http://localhost:5257
     ports:
-      - "5174:5174"
-    volumes:
-      - ../src/admin:/app
-      - /app/node_modules
-    environment:
-      VITE_API_BASE_URL: http://localhost:5257
-      VITE_DOCKER: "true"
+      - "5174:80"
 
 volumes:
   careeros-postgres-data:
