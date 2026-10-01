@@ -1,7 +1,7 @@
 import type { FormEvent } from 'react'
 import { ArrayField } from './ArrayField'
 
-export type FieldType = 'text' | 'textarea' | 'array' | 'array-multiline' | 'number' | 'email'
+export type FieldType = 'text' | 'textarea' | 'array' | 'array-multiline' | 'number' | 'email' | 'date'
 
 export interface FieldSchema<T> {
   key: keyof T
@@ -75,7 +75,15 @@ export function CrudForm<T extends object>({
                 />
               ) : (
                 <input
-                  type={field.type === 'number' ? 'number' : field.type === 'email' ? 'email' : 'text'}
+                  type={
+                    field.type === 'number'
+                      ? 'number'
+                      : field.type === 'email'
+                        ? 'email'
+                        : field.type === 'date'
+                          ? 'date'
+                          : 'text'
+                  }
                   className={field.icon ? 'form-control ps-5' : 'form-control'}
                   value={(current as string | number) ?? ''}
                   placeholder={field.placeholder}

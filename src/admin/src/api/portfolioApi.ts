@@ -3,6 +3,9 @@ import type {
   Certification,
   CertificationRequest,
   CredentialsResponse,
+  DiaryEntry,
+  DiaryEntryRequest,
+  DiaryQuery,
   EducationEntryRequest,
   ExperienceEntry,
   ExperienceEntryRequest,
@@ -53,4 +56,17 @@ export const portfolioApi = {
     apiClient.put<void>(`/api/credentials/certifications/${id}`, request),
   deleteCertification: (id: string) => apiClient.delete(`/api/credentials/certifications/${id}`),
   updateEducation: (request: EducationEntryRequest) => apiClient.put<void>('/api/credentials/education', request),
+
+  // Engineering Diary
+  getDiaryEntries: (query?: DiaryQuery) => {
+    const params = new URLSearchParams()
+    if (query?.search) params.set('search', query.search)
+    if (query?.category) params.set('category', query.category)
+    if (query?.tag) params.set('tag', query.tag)
+    const queryString = params.toString()
+    return apiClient.get<DiaryEntry[]>(`/api/diary${queryString ? `?${queryString}` : ''}`)
+  },
+  createDiaryEntry: (request: DiaryEntryRequest) => apiClient.post<DiaryEntry>('/api/diary', request),
+  updateDiaryEntry: (id: string, request: DiaryEntryRequest) => apiClient.put<void>(`/api/diary/${id}`, request),
+  deleteDiaryEntry: (id: string) => apiClient.delete(`/api/diary/${id}`),
 }

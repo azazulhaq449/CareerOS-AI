@@ -82,6 +82,16 @@ public static class EntityMappingExtensions
         Date = entity.Date,
     };
 
+    public static DiaryEntry ToModel(this DiaryEntryEntity entity) => new()
+    {
+        Id = entity.Id,
+        Title = entity.Title,
+        Content = entity.Content,
+        Category = entity.Category,
+        Tags = entity.Tags,
+        EntryDate = entity.EntryDate,
+    };
+
     // ---- Request DTO -> new Entity (Create) ----
 
     public static StrengthEntity ToEntity(this StrengthRequest request) => new()
@@ -131,6 +141,16 @@ public static class EntityMappingExtensions
         Name = request.Name,
         Date = request.Date,
         SortOrder = request.SortOrder,
+    };
+
+    public static DiaryEntryEntity ToEntity(this DiaryEntryRequest request) => new()
+    {
+        Id = Guid.NewGuid(),
+        Title = request.Title,
+        Content = request.Content,
+        Category = request.Category,
+        Tags = request.Tags,
+        EntryDate = request.EntryDate,
     };
 
     // ---- Request DTO -> existing Entity (Update, in place) ----
@@ -199,5 +219,14 @@ public static class EntityMappingExtensions
         entity.Degree = request.Degree;
         entity.Location = request.Location;
         entity.Date = request.Date;
+    }
+
+    public static void ApplyTo(this DiaryEntryRequest request, DiaryEntryEntity entity)
+    {
+        entity.Title = request.Title;
+        entity.Content = request.Content;
+        entity.Category = request.Category;
+        entity.Tags = request.Tags;
+        entity.EntryDate = request.EntryDate;
     }
 }

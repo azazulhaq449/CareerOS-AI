@@ -9,6 +9,7 @@ import { ExperiencePage } from './pages/ExperiencePage'
 import { ProjectsPage } from './pages/ProjectsPage'
 import { SkillsPage } from './pages/SkillsPage'
 import { CredentialsPage } from './pages/CredentialsPage'
+import { DiaryPage } from './pages/DiaryPage'
 import './styles/admin.css'
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
               <Route path="/projects" element={<ProjectsPage />} />
               <Route path="/skills" element={<SkillsPage />} />
               <Route path="/credentials" element={<CredentialsPage />} />
+              <Route path="/diary" element={<DiaryPage />} />
             </Route>
           </Route>
         </Routes>

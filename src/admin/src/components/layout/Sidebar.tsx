@@ -7,6 +7,7 @@ const NAV_ITEMS = [
   { to: '/projects', label: 'Projects', icon: 'ti-apps' },
   { to: '/skills', label: 'Skills', icon: 'ti-bulb' },
   { to: '/credentials', label: 'Certifications & Education', icon: 'ti-certificate' },
+  { to: '/diary', label: 'Engineering Diary', icon: 'ti-notebook' },
 ] as const
 
 export function Sidebar() {

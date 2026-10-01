@@ -15,6 +15,7 @@ public class CareerOSDbContext(DbContextOptions<CareerOSDbContext> options)
     public DbSet<SkillGroupEntity> SkillGroups => Set<SkillGroupEntity>();
     public DbSet<CertificationEntity> Certifications => Set<CertificationEntity>();
     public DbSet<EducationEntryEntity> EducationEntries => Set<EducationEntryEntity>();
+    public DbSet<DiaryEntryEntity> DiaryEntries => Set<DiaryEntryEntity>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -29,5 +30,8 @@ public class CareerOSDbContext(DbContextOptions<CareerOSDbContext> options)
         modelBuilder.Entity<ProjectEntryEntity>().HasIndex(p => p.SortOrder);
         modelBuilder.Entity<SkillGroupEntity>().HasIndex(s => s.SortOrder);
         modelBuilder.Entity<CertificationEntity>().HasIndex(c => c.SortOrder);
+
+        modelBuilder.Entity<DiaryEntryEntity>().HasIndex(d => d.Category);
+        modelBuilder.Entity<DiaryEntryEntity>().HasIndex(d => d.EntryDate);
     }
 }

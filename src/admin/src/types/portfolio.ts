@@ -80,3 +80,20 @@ export interface CredentialsResponse {
   certifications: Certification[]
   education: EducationEntry
 }
+
+export interface DiaryEntry {
+  id: string
+  title: string
+  content: string
+  category: string
+  tags: string[]
+  entryDate: string
+}
+
+export type DiaryEntryRequest = Omit<DiaryEntry, 'id'>
+
+export interface DiaryQuery {
+  search?: string
+  category?: string
+  tag?: string
+}

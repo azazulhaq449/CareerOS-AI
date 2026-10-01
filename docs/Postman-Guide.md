@@ -75,6 +75,7 @@ require the Bearer token:
 | Projects | `GET /api/projects`, `GET /api/projects/{id}` | `POST` / `PUT /{id}` / `DELETE /{id}` under `/api/projects` |
 | Skills | `GET /api/skills`, `GET /api/skills/{id}` | `POST` / `PUT /{id}` / `DELETE /{id}` under `/api/skills` |
 | Credentials | `GET /api/credentials` | `POST /api/credentials/certifications`, `PUT`/`DELETE /{id}`, `PUT /api/credentials/education` |
+| Diary | — (fully private, admin-only) | `GET /api/diary` (supports `?search=&category=&tag=`), `GET /{id}`, `POST` / `PUT /{id}` / `DELETE /{id}` under `/api/diary` |
 | Auth | — | `GET /api/auth/me`, `POST /api/auth/logout` |
 
 ## 5. Example request bodies
@@ -105,6 +106,23 @@ require the Bearer token:
   "sortOrder": 0
 }
 ```
+
+**Create a diary entry** — `POST {{baseUrl}}/api/diary`:
+
+```json
+{
+  "title": "Example Entry",
+  "content": "What I worked on today.",
+  "category": "Learning",
+  "tags": ["EFCore", "Postgres"],
+  "entryDate": "2026-10-01"
+}
+```
+
+`entryDate` is a `date` (no time component) — send it as `yyyy-MM-dd`.
+Unlike every other resource, **every** `/api/diary` endpoint requires the
+Bearer token, including `GET` — it's a private work log, not public
+portfolio content.
 
 All resource `id` values are GUIDs, visible in each `GET` response.
 

@@ -15,6 +15,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCareerOSDatabase(builder.Configuration);
 builder.Services.AddPortfolioFeature();
+builder.Services.AddDiaryFeature();
 builder.Services.AddCareerOSAuthentication(builder.Configuration);
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 

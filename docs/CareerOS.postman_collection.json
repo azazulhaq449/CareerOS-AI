@@ -15,7 +15,8 @@
     { "key": "projectId", "value": "" },
     { "key": "skillGroupId", "value": "" },
     { "key": "strengthId", "value": "" },
-    { "key": "certificationId", "value": "" }
+    { "key": "certificationId", "value": "" },
+    { "key": "diaryEntryId", "value": "" }
   ],
   "item": [
     {
@@ -387,6 +388,72 @@
               "raw": "{{baseUrl}}/api/credentials/education",
               "host": ["{{baseUrl}}"],
               "path": ["api", "credentials", "education"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Diary",
+      "item": [
+        {
+          "name": "Search / Get All",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/diary?search=&category=&tag=",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "diary"],
+              "query": [
+                { "key": "search", "value": "", "description": "Matches Title or Content (case-insensitive)" },
+                { "key": "category", "value": "" },
+                { "key": "tag", "value": "" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Example Entry\",\n  \"content\": \"What I worked on today.\",\n  \"category\": \"Learning\",\n  \"tags\": [\"EFCore\", \"Postgres\"],\n  \"entryDate\": \"2026-10-01\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/diary", "host": ["{{baseUrl}}"], "path": ["api", "diary"] }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": { "exec": ["const body = pm.response.json();", "pm.collectionVariables.set('diaryEntryId', body.id);"] }
+            }
+          ]
+        },
+        {
+          "name": "Update",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Example Entry (Updated)\",\n  \"content\": \"Updated content.\",\n  \"category\": \"Learning\",\n  \"tags\": [\"EFCore\", \"Postgres\"],\n  \"entryDate\": \"2026-10-01\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/diary/{{diaryEntryId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "diary", "{{diaryEntryId}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/api/diary/{{diaryEntryId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "diary", "{{diaryEntryId}}"]
             }
           }
         }
